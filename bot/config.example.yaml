@@ -54,7 +54,7 @@ behavior:
   coverage_timeout_seconds: 15 # 检查超时后保留原回复
   topic_push: true            # 回复太干时，自动接一个话题再发
   topic_push_cooldown: 60     # 两次“接话题”至少隔多少秒
-  followup_enabled: false     # 可选：未收到回复时，按概率再补一句
+  followup_enabled: true      # 未收到回复时，按概率再补一句
   followup_delay_distribution: [12.0, 20.0, 35.0]
   followup_probability: 0.35
   followup_second_delay_distribution: [40.0, 60.0, 100.0]
@@ -95,9 +95,9 @@ qzone:                        # QQ 空间（NapCat 扩展接口 send_qzone_msg�
     catchup_minutes: 10      # 错过计划超过 10 分钟则当天跳过
     ugc_right: 1
 
-# 主动搭话（默认关。开了以后，对方很久没说话时，机器人会自己发一条）
+# 主动搭话（默认开启；对方很久没说话时，可能主动发一条）
 proactive:
-  enabled: false
+  enabled: true
   idle_distribution_minutes: [60.0, 120.0, 210.0] # 单位分钟，众数两小时
   probability: 0.6            # 基础概率乘以模型情景倍率，上限为 1
   max_per_day: 3              # 每天最多主动发几条

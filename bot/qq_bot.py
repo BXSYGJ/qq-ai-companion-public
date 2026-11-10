@@ -113,7 +113,7 @@ DEFAULTS: dict[str, Any] = {
         "topic_push": True,
         "topic_push_cooldown": 60,
         # 她发完 20 秒他还没回，有一定概率自己再补一句新话题
-        "followup_enabled": False,
+        "followup_enabled": True,
         "followup_after_seconds": 20,
         "followup_probability": 0.35,
         "followup_delay_distribution": [12.0, 20.0, 35.0],
@@ -140,7 +140,7 @@ DEFAULTS: dict[str, Any] = {
         "auto_post": {"enabled": False, "time_distribution": [20.0, 22.0, 24.0], "ugc_right": 1},
     },
     "proactive": {
-        "enabled": False,
+        "enabled": True,
         "min_idle_minutes": 120,      # 这么久没说话才会想主动找他
         "idle_distribution_minutes": [60.0, 120.0, 210.0],
         "jitter_minutes": 40,         # 阈值随机浮动，免得每天同一时刻
