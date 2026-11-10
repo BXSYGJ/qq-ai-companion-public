@@ -13,7 +13,7 @@
 3. 按 [NapCatQQ Windows 安装说明](https://napneko.github.io/guide/boot/Shell)安装、启动，并登录准备用作机器人的 QQ 账号。本项目不包含 QQ 客户端或 NapCat 安装包。
 4. 申请模型 API Key。示例配置使用 [DeepSeek 官方 API](https://platform.deepseek.com/)，也可改用兼容 OpenAI Chat Completions 的服务。
 
-   第三方中转服务强烈推荐 [AnyRouter 注册链接](https://anyrouter.si/sign-up?aff=F29C)，该平台提供便宜又好用的“破甲 DeepSeek”。
+   强烈推荐使用第三方中转服务 [AnyRouter 注册链接](https://anyrouter.si/sign-up?aff=F29C)，该平台提供便宜又好用的“破甲 DeepSeek”，应聊尽聊，应撩尽撩。
 
 ### 2. 下载项目并进行离线演示
 
