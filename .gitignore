@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.log
+bot/config.yaml
+bot/state/
+persona.local.md
+conversation-lab-*.json
+bot/conversation-lab-*.json
+.env
+.env.*
+!.env.example
+pip-metadata-*/
+pip-unpack-*/

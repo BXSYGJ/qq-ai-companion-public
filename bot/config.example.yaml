@@ -1,0 +1,109 @@
+# ============================================================================
+# QQ 小号 AI 机器人 · 配置模板
+# 用法：复制成 config.yaml -> 填 QQ 白名单和模型服务配置 -> 运行自检
+# ============================================================================
+
+server:
+  host: 127.0.0.1        # 只监听本机。不要改成 0.0.0.0，否则同网段谁都能连
+  port: 6700             # NapCat「WebSocket 客户端」里填 ws://127.0.0.1:6700
+  access_token: ""       # 可选。填了就要求 NapCat 那边 token 一致（建议填一串随机字符）
+
+qq:
+  bot_uin: 0             # 小号 QQ 号；0 = 自动从事件里识别
+  allow_users: []        # 【必填】允许私聊的 QQ 号，例：[123456789]（你的大号）。空 = 谁都不回
+  allow_groups: []       # 允许的群号，例：[987654321]。空 = 群里不回
+  accept_private: true   # 是否回复私聊
+  reply_only_when_mentioned: true   # 群聊是否只理 @ 它的消息
+  group_reply_mode: chat # chat = 每个群一份上下文；user = 每群每人一份上下文
+
+llm:
+  base_url: https://api.deepseek.com/v1 # DeepSeek 官方 API；也可改为兼容接口地址
+  api_key: ""                          # 【必填】模型 API Key
+  model: deepseek-flash                # 使用其他服务商时改为其支持的模型名称
+  temperature: 0.95                    # 可按模型效果调整
+  max_tokens: 3000
+  timeout_seconds: 180
+  history_turns: 600                   # 记住最近多少轮（约 1200 条消息）
+  context_max_tokens: 200000           # 估算 token 超过就用模型压缩成摘要
+  compress_keep_turns: 80              # 压缩后保留最近多少轮原文
+  # 思考强度默认值：high / medium / low / none。QQ 里可用 /思考 高|中|低|关 临时改
+  reasoning_effort: low
+  # 如果服务商不支持 system 消息，可改成 user
+  persona_mode: system
+  extra_body: {}                       # 原样并入请求体的额外参数，例如 {"thinking": {"type": "enabled"}}
+  system_prompt: "你在 QQ 上和人聊天，说话自然、简短，像真人发消息。"
+  # 填了这个人格文件就优先用它（相对 bot 目录，也可写绝对路径）
+  system_prompt_file: "../persona.example.md"
+
+behavior:
+  sanitize: true              # 去掉 markdown 符号（**、#、反引号、列表符）
+  multi_message: true         # 长回复拆成 1~3 条短消息发，更像真人
+  segment_max: 3              # 最多拆几条
+  segment_delay_ms: [600, 1800]   # 每条之间的随机间隔（毫秒），别调太小
+  split_length: 1500          # 单条最长字数
+  reply_delay_ms: 400         # 发第一条前的思考停顿
+  rate_limit_per_minute: 12   # 每个会话每分钟最多处理多少条，防刷屏、防风控
+  max_concurrency: 3          # 同时最多几个模型请求
+  error_reply: "刚走神了，你刚说什么？"
+  inject_time: true           # 每条消息附带【当前时间】，人格第 10 节会用到
+  debounce_distribution: [3.5, 5.0, 8.0] # 最小值、众数、最大值，单位秒
+  debounce_max_wait: 25.0     # 最多攒这么久，防止一直发就一直不回
+  segment_max_burst: 6        # 他连发多条时，她最多拆成几条回
+  regenerate_max: 3           # 连续生成次数上限；耗尽时保留消息并重新排队
+  coverage_check: true        # 多问题或多话题时额外检查回复覆盖情况
+  coverage_timeout_seconds: 15 # 检查超时后保留原回复
+  topic_push: true            # 回复太干时，自动接一个话题再发
+  topic_push_cooldown: 60     # 两次“接话题”至少隔多少秒
+  followup_enabled: false     # 可选：未收到回复时，按概率再补一句
+  followup_delay_distribution: [12.0, 20.0, 35.0]
+  followup_probability: 0.35
+  followup_second_delay_distribution: [40.0, 60.0, 100.0]
+  followup_second_probability: 0.18
+  typing_indicator: true      # 私聊里显示“对方正在输入”
+  wait_while_typing: true     # 他还在输入时不发，等他把话打完
+  typing_hold_seconds: 10     # 这么久没新的输入事件，就当他不打了
+  typing_grace_distribution: [3.5, 5.0, 8.0]
+  typing_max_wait: 90         # 最多为他等这么久，防止事件丢失卡死
+
+memory:
+  persist: true               # 上下文记忆 + 每会话思考强度落盘，重启后还在
+  dir: state                  # 记忆文件目录（相对 bot 目录）
+  event_enabled: true         # 私聊回复后异步提取事件；额外调用一次模型
+  event_timeout_seconds: 12   # 提取超时不影响聊天回复
+  event_max_items: 50         # 每个会话最多保留的事件数
+
+media:
+  enabled: true
+  vision_model: ""            # 留空使用 llm.model；接口和模型需要支持视觉
+  max_bytes: 5242880          # 每个附件不超过 5 MiB
+  max_text_chars: 12000
+  max_items_per_message: 4
+  timeout_seconds: 45
+
+history_import:               # 已有私聊记录导入（默认关；手动发 /导入历史 500）
+  enabled: false
+  on_connect: false
+  count: 500                  # 最多拉最近多少条
+
+qzone:                        # QQ 空间（NapCat 扩展接口 send_qzone_msg）
+  enabled: false              # 按需启用；发布前检查可见范围
+  ugc_right: 1                # 1 公开 / 4 好友可见 / 64 仅自己 / 16 部分好友 / 128 部分好友不可见
+  max_chars: 800
+  auto_post:                  # 每天定时自动发一条（默认关）
+    enabled: false
+    time_distribution: [20.0, 22.0, 24.0] # 当地时间小时，众数 22:00
+    catchup_minutes: 10      # 错过计划超过 10 分钟则当天跳过
+    ugc_right: 1
+
+# 主动搭话（默认关。开了以后，对方很久没说话时，机器人会自己发一条）
+proactive:
+  enabled: false
+  idle_distribution_minutes: [60.0, 120.0, 210.0] # 单位分钟，众数两小时
+  probability: 0.6            # 基础概率乘以模型情景倍率，上限为 1
+  max_per_day: 3              # 每天最多主动发几条
+  cooldown_minutes: 90        # 两次主动之间至少隔多久
+  quiet_hours: ["00:30-08:30"]  # 这个时间段不发
+
+log:
+  file: qq-bot.log
+  level: INFO
