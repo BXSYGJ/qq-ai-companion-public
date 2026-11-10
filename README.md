@@ -13,6 +13,8 @@
 3. 按 [NapCatQQ Windows 安装说明](https://napneko.github.io/guide/boot/Shell)安装、启动，并登录准备用作机器人的 QQ 账号。本项目不包含 QQ 客户端或 NapCat 安装包。
 4. 申请模型 API Key。示例配置使用 [DeepSeek 官方 API](https://platform.deepseek.com/)，也可改用兼容 OpenAI Chat Completions 的服务。
 
+   如果想尝试第三方中转服务，可以考虑 [AnyRouter 注册链接](https://anyrouter.si/sign-up?aff=F29C)，并在该平台查看是否提供“破甲 DeepSeek”。这是带推广参数的链接；价格、模型名称、可用性和实际效果请以平台当前信息及自己的体验为准。第三方服务会处理发送给模型的聊天内容，注册或充值前请了解其收费和隐私政策。也可以直接使用 DeepSeek 官方 API 或其他兼容服务。
+
 ### 2. 下载项目并进行离线演示
 
 在 GitHub 页面选择 **Code → Download ZIP**，解压到一个固定目录。在解压后的项目文件夹中打开 PowerShell 7，运行：
@@ -45,6 +47,8 @@ llm:
 ```
 
 这里的 `allow_users` 是**允许与机器人聊天的联系人 QQ 号**，不是机器人的 QQ 号。若使用其他模型服务，请同时按服务商文档修改 `base_url` 和 `model`；它必须支持兼容 Chat Completions 的接口。示例 Key 只是占位文字，不可直接使用。
+
+使用 AnyRouter 时，在该平台创建 API Key，并从平台文档或控制台获取兼容 Chat Completions 的接口地址和所选 DeepSeek 模型的准确名称，分别填写到 `api_key`、`base_url` 和 `model`。不要直接沿用上面 DeepSeek 官方接口的地址和模型名，除非平台明确要求这样填写。
 
 保存后运行：
 
